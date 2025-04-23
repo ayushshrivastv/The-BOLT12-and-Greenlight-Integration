@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Human-Readable BOLT12 Offer Implementation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #2d2d2d;
+      background-color: #ffffff;
+      padding: 30px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
+      background-color: white;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #BD4B1D;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin: 25px 0 15px;
+      color: #BD4B1D;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 5px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 20px 0 10px;
+      color: #444;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .date {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    ul, ol {
+      margin: 15px 0 15px 30px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #f5f5f5;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 90%;
+    }
+
+    pre {
+      background-color: #f5f5f5;
+      border-radius: 5px;
+      padding: 15px;
+      overflow-x: auto;
+      margin: 15px 0;
+      border: 1px solid #e0e0e0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+
+    .screenshot {
+      margin: 25px 0;
+      text-align: center;
+    }
+
+    .screenshot img {
+      max-width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-style: italic;
+      color: #666;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    table, th, td {
+      border: 1px solid #e0e0e0;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f5f5f5;
+    }
+
+    .page-break {
+      page-break-after: always;
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Setting Up a Human-Readable BOLT12 Offer</h1>
+      <p class="subtitle">A Detailed Implementation Guide</p>
+      <p class="date">April 23, 2025</p>
+    </header>
+
+    <section class="introduction">
+      <h2>1. Introduction</h2>
+      <p>
+        This document details the implementation process of creating a human-readable BOLT12 offer using Core Lightning
+        and setting up a BIP353 Bitcoin username. This approach allows users to associate their Lightning payment option
+        with a human-readable name, making it easier for others to send Bitcoin payments without dealing with complex
+        addresses.
+      </p>
+      <p>
+        The implementation follows Seth for Privacy's guide on setting up a Bitcoin username, with step-by-step
+        documentation of each stage of the process.
+      </p>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section class="implementation">
+      <h2>2. Implementation Process</h2>
+
+      <h3>2.1 Configuring Core Lightning with Experimental Features</h3>
+      <p>
+        BOLT12 offers require Core Lightning to be run with experimental features enabled. This can be done
+        by adding the appropriate flags to the command line or configuration file.
+      </p>
+      <pre>lightningd --enable-experimental-offers --bitcoin-rpcuser=user --bitcoin-rpcpassword=password ...</pre>
+      <p>Or in the configuration file (<code>~/.lightning/config</code>):</p>
+      <pre>enable-experimental-offers=true
+network=bitcoin
+bitcoin-rpcuser=your_username
+bitcoin-rpcpassword=your_password
+...</pre>
+
+      <h3>2.2 Generating a BOLT12 Offer</h3>
+      <p>
+        The next step is to generate a BOLT12 offer using the Core Lightning CLI. The command below creates a
+        flexible offer that can receive any amount:
+      </p>
+      <pre>lightning-cli offer any description="Payments to Your Name"</pre>
+      <p>The output will look something like this:</p>
+      <pre>{
+  "offer_id": "7d8e62146905b9c3a7a944fd6a89f34c6f54c18ba19ab989de2e5ac2a3cc4654",
+  "active": true,
+  "single_use": false,
+  "bolt12": "lno1pg0pu..."
+}</pre>
+      <p>
+        The <code>bolt12</code> value is the Lightning offer string that will be associated with your username
+        in the DNS record.
+      </p>
+
+      <div class="screenshot">
+        <img src="../screenshots/bolt12-offer.png" alt="Creating a BOLT12 offer" />
+        <p class="caption">Figure 1: Example of creating a BOLT12 offer in Core Lightning</p>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section class="dns-setup">
+      <h3>2.3 Setting Up DNS TXT Record</h3>
+      <p>
+        According to BIP353, a DNS TXT record needs to be created with a specific format that includes
+        the BOLT12 offer. The format follows this pattern:
+      </p>
+      <pre>_bitcoin._username.yourdomain.com. IN TXT "bolt12=lno1pg0pu..."</pre>
+      <p>
+        For example, if your username is "satoshi" and your domain is "example.com", you would create a TXT record for:
+      </p>
+      <pre>_bitcoin._username.example.com</pre>
+      <p>With the value:</p>
+      <pre>bolt12=lno1pg0pu...</pre>
+
+      <div class="screenshot">
+        <img src="../screenshots/dns-setup.png" alt="DNS TXT Record Setup" />
+        <p class="caption">Figure 2: Setting up the DNS TXT record in a domain registrar</p>
+      </div>
+
+      <h3>2.4 Verifying DNS Setup</h3>
+      <p>
+        After setting up the DNS record, it's important to verify that it's correctly configured. This can be
+        done using the <code>dig</code> command:
+      </p>
+      <pre>dig TXT _bitcoin._username.yourdomain.com</pre>
+      <p>A successful verification will show output that includes your BOLT12 offer in the answer section:</p>
+      <pre>;; ANSWER SECTION:
+_bitcoin._username.example.com. 3600 IN TXT "bolt12=lno1pg0p..."</pre>
+
+      <div class="screenshot">
+        <img src="../screenshots/verify-dns.png" alt="Verifying DNS Setup" />
+        <p class="caption">Figure 3: Verifying the DNS TXT record configuration</p>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section class="testing">
+      <h3>2.5 Testing the Bitcoin Username</h3>
+      <p>
+        Once the DNS record has propagated (which can take up to 24-48 hours), you can test your Bitcoin
+        username using compatible wallets or tools. With Core Lightning, you can use the following command:
+      </p>
+      <pre>lightning-cli decode username@yourdomain.com</pre>
+      <p>If successful, this should resolve to your BOLT12 offer:</p>
+      <pre>{
+  "type": "bolt12 offer",
+  "bolt12": "lno1pg0pu...",
+  "description": "Payments to Your Name",
+  "valid": true
+}</pre>
+      <p>
+        Compatible wallets like Phoenix Wallet can also be used to test the username by entering
+        it in the payment field.
+      </p>
+    </section>
+
+    <section class="observations">
+      <h2>3. Observations and Results</h2>
+      <p>
+        Throughout the implementation process, several key observations were made:
+      </p>
+      <ul>
+        <li>
+          <strong>Improved User Experience:</strong> BOLT12 offers combined with human-readable usernames significantly
+          improve the usability of Bitcoin payments, making them more accessible to mainstream users.
+        </li>
+        <li>
+          <strong>Technical Requirements:</strong> The implementation requires Core Lightning with experimental
+          features enabled, which may limit adoption until these features become standard.
+        </li>
+        <li>
+          <strong>DNS Propagation:</strong> DNS record changes can take time to propagate, sometimes up to 48 hours,
+          which means the username may not be immediately available after setup.
+        </li>
+        <li>
+          <strong>Limited Wallet Support:</strong> Currently, only a few Lightning wallets support BOLT12 and BIP353,
+          but this is expected to improve as the technology matures.
+        </li>
+      </ul>
+
+      <h3>3.1 Compatibility</h3>
+      <table>
+        <tr>
+          <th>Wallet/Tool</th>
+          <th>BOLT12 Support</th>
+          <th>BIP353 Support</th>
+        </tr>
+        <tr>
+          <td>Core Lightning CLI</td>
+          <td>Yes (with experimental features)</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Phoenix Wallet</td>
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>LND</td>
+          <td>No (requires LNDK)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Eclair</td>
+          <td>Yes</td>
+          <td>Limited</td>
+        </tr>
+      </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section class="conclusion">
+      <h2>4. Conclusion</h2>
+      <p>
+        The implementation of a human-readable BOLT12 offer using BIP353 was successful. This approach
+        provides a more user-friendly way for others to send Bitcoin payments, balancing the decentralized
+        nature of Bitcoin with improved usability.
+      </p>
+      <p>
+        While the current implementation has some limitations, particularly in terms of wallet support and
+        the need for experimental features, these issues are likely to be resolved as BOLT12 and BIP353
+        gain wider adoption.
+      </p>
+      <p>
+        The combination of Lightning Network's speed and low fees with human-readable addresses represents
+        a significant step forward in making Bitcoin more accessible and user-friendly for everyday use cases.
+      </p>
+    </section>
+
+    <section class="references">
+      <h2>5. References</h2>
+      <ol>
+        <li>Seth for Privacy's Guide on Setting up a Bitcoin Username:
+          <br><code>https://sethforprivacy.com/guides/setting-up-a-bitcoin-username/</code>
+        </li>
+        <li>BIP353 Specification:
+          <br><code>https://github.com/bitcoin/bips/blob/master/bip-0353.mediawiki</code>
+        </li>
+        <li>BOLT12 Documentation:
+          <br><code>https://bolt12.org/</code>
+        </li>
+        <li>Core Lightning Offer Command Reference:
+          <br><code>https://docs.corelightning.org/reference/offer</code>
+        </li>
+      </ol>
+    </section>
+  </div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setting Up a Human-Readable BOLT12 Offer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Setting Up a Human-Readable BOLT12 Offer</h1>
+      <p class="subtitle">Following Seth for Privacy's Guide on Bitcoin Usernames</p>
+      <div class="date">April 23, 2025</div>
+      <button id="downloadPdf" class="download-btn">Download as PDF</button>
+    </header>
+
+    <section class="introduction">
+      <h2>Summary of Findings</h2>
+      <p>
+        This document outlines the process and key observations from setting up a human-readable
+        BOLT12 Lightning Network payment offer as described in Seth for Privacy's guide. This approach
+        uses BIP353 to connect a domain name with a Lightning payment option.
+      </p>
+    </section>
+
+    <section class="key-steps">
+      <h2>Key Steps Completed</h2>
+      <ol>
+        <li><strong>Enabled Core Lightning Experimental Features</strong> to support BOLT12 offers</li>
+        <li><strong>Generated a BOLT12 Offer</strong> using the Core Lightning CLI</li>
+        <li><strong>Created a DNS TXT Record</strong> in the format specified by BIP353</li>
+        <li><strong>Verified DNS Setup</strong> using appropriate tools</li>
+        <li><strong>Tested the Bitcoin Username</strong> with compatible wallets</li>
+      </ol>
+    </section>
+
+    <section class="screenshot-section">
+      <h2>Documentation Process</h2>
+      <p>
+        The full detailed guide has been included as a printable document with screenshots of each step:
+      </p>
+      <div class="pdf-screenshot">
+        <img src="https://ext.same-assets.com/2146336619/1502436942.png" alt="DNS Setup Screenshot" class="screenshot-img">
+        <p class="caption">Example DNS setup from Seth for Privacy's guide</p>
+      </div>
+    </section>
+
+    <section class="observations">
+      <h2>Key Observations</h2>
+      <ul>
+        <li>BOLT12 offers provide a more user-friendly approach to Lightning payments</li>
+        <li>The DNS-based username system works well for human-readable payment addresses</li>
+        <li>Implementation requires Core Lightning with experimental features enabled</li>
+        <li>Only compatible with certain wallets that support BOLT12 and BIP353</li>
+      </ul>
+    </section>
+
+    <section class="conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        The setup of a human-readable BOLT12 offer was successful, providing a more convenient way for
+        others to send Bitcoin payments. The technical implementation follows the BIP353 specification
+        and leverages DNS for username resolution, creating a balance between decentralization and usability.
+      </p>
+    </section>
+
+    <section class="links">
+      <h2>Relevant Links</h2>
+      <ul>
+        <li><a href="https://sethforprivacy.com/guides/setting-up-a-bitcoin-username/">Seth for Privacy's Guide</a></li>
+        <li><a href="https://github.com/bitcoin/bips/blob/master/bip-0353.mediawiki">BIP353 Specification</a></li>
+        <li><a href="https://bolt12.org/">BOLT12 Documentation</a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('downloadPdf').addEventListener('click', () => {
+      window.print();
+    });
+  </script>
+</body>
+</html>

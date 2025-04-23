@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setting Up a Human-Readable BOLT12 Offer</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Setting Up a Human-Readable BOLT12 Offer</h1>
+      <p class="subtitle">Following Seth for Privacy's Guide on Bitcoin Usernames</p>
+      <div class="date">April 23, 2025</div>
+    </header>
+
+    <section class="introduction">
+      <h2>Introduction</h2>
+      <p>
+        This guide documents the process of creating a human-readable BOLT12 offer using Core Lightning
+        and setting up a BIP353 Bitcoin username. BIP353 allows you to associate a Lightning payment option
+        with a human-readable name, making it easier for others to send you Bitcoin payments.
+      </p>
+      <p>
+        We'll follow the steps outlined in Seth for Privacy's guide and document the entire process
+        with screenshots and detailed commands.
+      </p>
+    </section>
+
+    <section class="prerequisites">
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>A running Bitcoin full node</li>
+        <li>Core Lightning node with experimental features enabled</li>
+        <li>Access to DNS records for a domain you control</li>
+        <li>Command-line interface access to your Lightning node</li>
+      </ul>
+    </section>
+
+    <section class="step-one">
+      <h2>Step 1: Ensure Core Lightning is Running with Experimental Features</h2>
+      <p>
+        BOLT12 offers require Core Lightning to be run with the <code>--enable-experimental-features</code> or
+        <code>--enable-experimental-offers</code> flag. Check your configuration to ensure one of these flags
+        is set.
+      </p>
+      <pre><code>lightningd --enable-experimental-offers --bitcoin-rpcuser=user --bitcoin-rpcpassword=password ...</code></pre>
+      <p>Or in your config file (<code>~/.lightning/config</code>):</p>
+      <pre><code>enable-experimental-offers=true
+network=bitcoin
+bitcoin-rpcuser=your_username
+bitcoin-rpcpassword=your_password
+...</code></pre>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Core Lightning configuration file with experimental offers enabled</div>
+      </div>
+    </section>
+
+    <section class="step-two">
+      <h2>Step 2: Generate a BOLT12 Offer</h2>
+      <p>
+        We'll use the <code>offer</code> command in Core Lightning to create a reusable payment offer:
+      </p>
+      <pre><code>lightning-cli offer any description="Payments to Your Name"</code></pre>
+      <p>
+        This will create a flexible offer that can be used to receive any amount. The output will look something like:
+      </p>
+      <pre><code>{
+  "offer_id": "7d8e62146905b9c3a7a944fd6a89f34c6f54c18ba19ab989de2e5ac2a3cc4654",
+  "active": true,
+  "single_use": false,
+  "bolt12": "lno1pg0pu..."
+}</code></pre>
+      <p>
+        The <code>bolt12</code> value is your Lightning offer, which will be associated with your username
+        in a DNS record.
+      </p>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Creating a BOLT12 offer with Core Lightning CLI</div>
+      </div>
+    </section>
+
+    <section class="step-three">
+      <h2>Step 3: Purchase a Domain (if needed)</h2>
+      <p>
+        If you don't already have a domain, you'll need to purchase one from a domain registrar.
+        Some privacy-focused options include:
+      </p>
+      <ul>
+        <li>Njalla</li>
+        <li>Namecheap</li>
+        <li>OrangeWebsite</li>
+      </ul>
+      <p>
+        Make sure you can add custom DNS TXT records to the domain.
+      </p>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Domain registrar interface (Njalla shown as example)</div>
+      </div>
+    </section>
+
+    <section class="step-four">
+      <h2>Step 4: Create DNS TXT Record for BIP353</h2>
+      <p>
+        According to BIP353, you need to create a TXT record with a specific format that includes
+        your BOLT12 offer. The format is:
+      </p>
+      <pre><code>_bitcoin._username.yourdomain.com. IN TXT "bolt12=lno1pg0pu..."</code></pre>
+      <p>
+        For example, if your username is "satoshi" and your domain is "example.com", you would
+        create a TXT record for:
+      </p>
+      <pre><code>_bitcoin._username.example.com</code></pre>
+      <p>
+        With the value:
+      </p>
+      <pre><code>bolt12=lno1pg0pu...</code></pre>
+      <p>
+        Where "lno1pg0pu..." is the BOLT12 offer you generated in Step 2.
+      </p>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Setting up DNS TXT record in domain registrar interface</div>
+      </div>
+    </section>
+
+    <section class="step-five">
+      <h2>Step 5: Verify Your DNS Setup</h2>
+      <p>
+        You can verify your DNS TXT record is properly set up by using the <code>dig</code> command:
+      </p>
+      <pre><code>dig TXT _bitcoin._username.yourdomain.com</code></pre>
+      <p>
+        You should see output that includes your BOLT12 offer in the answer section.
+      </p>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Verifying DNS TXT record with dig command</div>
+      </div>
+      <p>Example successful dig output:</p>
+      <pre><code>;; ANSWER SECTION:
+_bitcoin._username.example.com. 3600 IN TXT "bolt12=lno1pg0p..."</code></pre>
+    </section>
+
+    <section class="step-six">
+      <h2>Step 6: Testing Your Bitcoin Username</h2>
+      <p>
+        Once your DNS record is propagated (which can take up to 24-48 hours), you can test your
+        Bitcoin username using compatible wallets:
+      </p>
+      <ul>
+        <li>Phoenix Wallet</li>
+        <li>Core Lightning CLI</li>
+        <li>Other BOLT12-compatible wallets</li>
+      </ul>
+      <p>
+        To test using Core Lightning, you can use:
+      </p>
+      <pre><code>lightning-cli decode username@yourdomain.com</code></pre>
+      <p>
+        This should resolve to your BOLT12 offer.
+      </p>
+      <div class="screenshot">
+        <div class="img-placeholder">Screenshot: Testing the Bitcoin username with Core Lightning</div>
+      </div>
+      <p>Example output from successful decode:</p>
+      <pre><code>{
+  "type": "bolt12 offer",
+  "bolt12": "lno1pg0pu...",
+  "description": "Payments to Your Name",
+  "valid": true
+}</code></pre>
+    </section>
+
+    <section class="observations">
+      <h2>Observations and Troubleshooting</h2>
+      <p>
+        During this process, you might encounter some issues:
+      </p>
+      <ul>
+        <li>DNS propagation delays can make your username temporarily unavailable</li>
+        <li>Ensure the BOLT12 offer is entered correctly in the TXT record</li>
+        <li>Verify that Core Lightning is running with experimental features enabled</li>
+        <li>Make sure your node is online and accessible for receiving payments</li>
+      </ul>
+    </section>
+
+    <section class="conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        Setting up a human-readable Bitcoin username using BIP353 and BOLT12 offers provides a more
+        user-friendly way for others to send you payments on the Lightning Network. This approach
+        maintains the decentralized nature of Bitcoin while improving usability.
+      </p>
+      <p>
+        As BOLT12 adoption increases, this method will become more widely supported across wallets
+        and services, making it an investment in future user experience.
+      </p>
+    </section>
+
+    <section class="references">
+      <h2>References</h2>
+      <ul>
+        <li><a href="https://sethforprivacy.com/guides/setting-up-a-bitcoin-username/">Seth for Privacy's Guide on Setting up a Bitcoin Username</a></li>
+        <li><a href="https://github.com/bitcoin/bips/blob/master/bip-0353.mediawiki">BIP353 Specification</a></li>
+        <li><a href="https://bolt12.org/">BOLT12 Official Documentation</a></li>
+        <li><a href="https://docs.corelightning.org/reference/offer">Core Lightning Offer Command Reference</a></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>

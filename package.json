@@ -1,0 +1,47 @@
+{
+  "name": "bolt12-username-guide",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "biome lint --write && tsc --noEmit",
+    "server": "tsx server/index.ts"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "dns": "^0.2.2",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.35",
+    "autoprefixer": "^10.4.17",
+    "express": "^4.18.2",
+    "tsx": "^4.7.1",
+    "clightning-rpc": "^0.5.1",
+    "lightning": "^9.5.0",
+    "bolt11": "^1.4.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@eslint/js": "9.22.0",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "8.26.1",
+    "@typescript-eslint/parser": "8.26.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "9.22.0",
+    "eslint-config-prettier": "10.1.1",
+    "eslint-import-resolver-typescript": "3.8.7",
+    "eslint-plugin-import": "2.31.0",
+    "eslint-plugin-prettier": "5.2.3",
+    "prettier": "3.5.3",
+    "prettier-plugin-tailwindcss": "0.6.11",
+    "typescript": "5.6.3",
+    "typescript-eslint": "8.26.1",
+    "vite": "6.2.2"
+  }
+}
